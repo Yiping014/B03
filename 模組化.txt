@@ -1,0 +1,16 @@
+project/
+├── index.html
+├── css/
+│   └── style.css
+└── js/
+    ├── main.js        ← 唯一入口，只負責「串接」
+    ├── config.js      ← 常數（門檻、間隔時間）
+    ├── utils.js       ← clamp、formatTime、formatDb、轉 dB
+    ├── state.js       ← 共用狀態與 resetStats
+    ├── dom.js         ← 所有 getElementById 集中在這裡
+    ├── audio.js       ← 麥克風啟動/停止、讀取音量、校正環境噪音
+    ├── health.js      ← 健康值扣血/回血計算（不碰畫面）
+    ├── feedback.js    ← 狀態標籤、AI 回饋文字、黃色提醒
+    ├── alert.js       ← 紅色滿版警示
+    ├── login.js       ← 登入、選組別
+    └── report.js      ← 總結頁與折線圖

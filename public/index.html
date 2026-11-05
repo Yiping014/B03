@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>知音 - 討論健康監測系統</title>
+    <link rel="stylesheet" href="CSS/style.css" />
+  </head>
+  <body>
+    <!-- 1. 學生登入畫面 -->
+    <div id="loginView" class="login-view">
+      <div class="login-card panel">
+        <p class="eyebrow">學生端</p>
+        <h1>知音</h1>
+        <p class="login-sub">請輸入班級並選擇你的組別</p>
+
+        <label class="login-label" for="classInput">班級（選填）</label>
+        <input id="classInput" class="login-input" type="text" placeholder="請輸入班級" />
+
+        <label class="login-label">選擇組別</label>
+        <div id="groupOptions" class="group-options">
+          <button type="button" class="group-option" data-group="1">1 組</button>
+          <button type="button" class="group-option" data-group="2">2 組</button>
+          <button type="button" class="group-option" data-group="3">3 組</button>
+          <button type="button" class="group-option" data-group="4">4 組</button>
+          <button type="button" class="group-option" data-group="5">5 組</button>
+          <button type="button" class="group-option" data-group="6">6 組</button>
+          <button type="button" class="group-option" data-group="7">7 組</button>
+          <button type="button" class="group-option" data-group="8">8 組</button>
+        </div>
+
+        <label class="login-label" for="durationSelect">討論時間</label>
+        <select id="durationSelect" class="login-input">
+          <option value="0">不限時</option>
+          <option value="1">1 分鐘</option>
+          <option value="5">5 分鐘</option>
+          <option value="10" selected>10 分鐘</option>
+          <option value="15">15 分鐘</option>
+          <option value="20">20 分鐘</option>
+        </select>
+
+        <button id="enterBtn" class="primary-btn login-btn" disabled>進入討論</button>
+      </div>
+    </div>
+
+    <!-- 討論主畫面 -->
+    <div id="appView" class="app-shell" hidden>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">學生端</p>
+          <h1>知音</h1>
+        </div>
+
+        <div class="top-actions">
+          <button id="discussionBackBtn" class="secondary-btn">回到登入畫面</button>
+          <button id="recalBtn" class="secondary-btn">重新校正</button>
+          <button id="startBtn" class="primary-btn">啟動麥克風</button>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <section class="stats-grid">
+          <div class="stat-card accent-green">
+            <span class="stat-label">討論健康值</span>
+            <strong id="healthValue" class="stat-value">100</strong>
+          </div>
+
+          <div class="stat-card accent-blue">
+            <span class="stat-label">音量</span>
+            <strong id="volumeValue" class="stat-value">0 dB</strong>
+          </div>
+
+          <div class="stat-card accent-gold">
+            <span class="stat-label">環境基線</span>
+            <strong id="noiseValue" class="stat-value">0 dB</strong>
+          </div>
+
+          <div class="stat-card accent-purple">
+            <span id="timeLabel" class="stat-label">討論時間</span>
+            <strong id="timeValue" class="stat-value">00:00</strong>
+          </div>
+        </section>
+
+        <section class="panel main-panel">
+          <div class="group-card">
+            <div class="group-head">
+              <span id="groupBadge" class="badge">1 組</span>
+              <span id="statusText" class="status ok">待啟動</span>
+            </div>
+
+            <div class="health-wrap">
+              <label>討論健康值</label>
+              <div class="health-bar">
+                <div id="healthFill" class="health-fill"></div>
+              </div>
+              <div class="health-meta">
+                <span id="healthScore">100</span>
+                <span>/ 100</span>
+              </div>
+            </div>
+
+            <div class="meter-row">
+              <span>即時音量</span>
+              <strong id="volumeDisplay">0 dB</strong>
+            </div>
+            <div class="volume-bar">
+              <div id="volumeFill" class="volume-fill"></div>
+            </div>
+
+            <div class="signal-wrap" aria-label="音訊強度">
+              <span class="signal-bar"></span><span class="signal-bar"></span>
+              <span class="signal-bar"></span><span class="signal-bar"></span>
+              <span class="signal-bar"></span><span class="signal-bar"></span>
+              <span class="signal-bar"></span><span class="signal-bar"></span>
+              <span class="signal-bar"></span><span class="signal-bar"></span>
+              <span class="signal-bar"></span><span class="signal-bar"></span>
+              <span class="signal-bar"></span><span class="signal-bar"></span>
+              <span class="signal-bar"></span><span class="signal-bar"></span>
+              <span class="signal-bar"></span><span class="signal-bar"></span>
+              <span class="signal-bar"></span><span class="signal-bar"></span>
+            </div>
+          </div>
+
+          <div class="ai-card">
+            <p class="ai-label">AI 討論回饋</p>
+            <div id="healthReminder" class="health-reminder" hidden></div>
+            <div id="feedbackBox" class="feedback-box neutral">
+              請開啟麥克風，讓系統開始偵測討論狀態。
+            </div>
+          </div>
+        </section>
+      </main>
+      <div id="classBadge" class="class-badge">班級：未填寫</div>
+    </div>
+
+    <!-- 4. 討論結束總結頁 -->
+    <div id="reportView" class="app-shell" hidden>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">討論結束</p>
+          <h1>本次討論總結</h1>
+        </div>
+        <div class="top-actions">
+          <button id="backBtn" class="primary-btn">回到登入畫面</button>
+        </div>
+      </header>
+      <div id="syncStatus" class="sync-status" hidden></div>
+
+      <main class="dashboard">
+        <section class="stats-grid">
+          <div class="stat-card accent-green">
+            <span class="stat-label">組別</span>
+            <strong id="reportGroup" class="stat-value">-</strong>
+          </div>
+          <div class="stat-card accent-purple">
+            <span class="stat-label">討論時間</span>
+            <strong id="reportDuration" class="stat-value">00:00</strong>
+          </div>
+          <div class="stat-card accent-blue">
+            <span class="stat-label">平均音量</span>
+            <strong id="reportAvgDb" class="stat-value">0 dB</strong>
+          </div>
+          <div class="stat-card accent-gold">
+            <span class="stat-label">最高音量</span>
+            <strong id="reportMaxDb" class="stat-value">0 dB</strong>
+          </div>
+        </section>
+
+        <section class="panel report-grid">
+          <div class="summary-card">
+            <h2>討論健康值</h2>
+            <ul class="summary-list">
+              <li>結束時健康值：<strong id="reportFinalHealth">100</strong></li>
+              <li>最低健康值：<strong id="reportMinHealth">100</strong></li>
+              <li>紅色警示次數：<strong id="reportAlerts">0</strong> 次</li>
+            </ul>
+
+            <h2 class="report-sub">各區間停留比例</h2>
+            <div class="zone-row"><span>綠色（正常）</span><strong id="zoneGreen">0%</strong></div>
+            <div class="zone-bar"><div id="zoneGreenBar" class="zone-fill green"></div></div>
+            <div class="zone-row"><span>黃色（需留意）</span><strong id="zoneYellow">0%</strong></div>
+            <div class="zone-bar"><div id="zoneYellowBar" class="zone-fill yellow"></div></div>
+            <div class="zone-row"><span>紅色（過熱）</span><strong id="zoneRed">0%</strong></div>
+            <div class="zone-bar"><div id="zoneRedBar" class="zone-fill red"></div></div>
+          </div>
+
+          <div class="summary-card">
+            <h2>健康值變化</h2>
+            <div id="reportChart" class="report-chart"></div>
+
+            <h2 class="report-sub">AI 整體回饋</h2>
+            <div id="reportFeedback" class="feedback-box neutral"></div>
+            <ul id="reportAdvice" class="summary-list"></ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- 2. 紅色滿版警示 -->
+    <div id="alertOverlay" class="alert-overlay" hidden>
+      <div class="alert-content">
+        <div id="alertWarningContent">
+          <div class="alert-icon">⚠</div>
+          <h2>討論過於激烈！</h2>
+          <p>討論健康值已降至 <strong id="alertHealth">0</strong>，音量過高。</p>
+          <p>請先停下來，整理重點，並輪流發言。</p>
+          <button id="alertCloseBtn" class="alert-btn">我知道了，調整音量</button>
+        </div>
+        <div id="healthQuizContent" hidden>
+          <div class="alert-icon">❓</div>
+          <h2>健康值歸零！</h2>
+          <p>勾選所有能幫助大家降低音量的做法，答對後即可繼續討論。</p>
+          <div class="alert-quiz-options">
+            <label><input type="checkbox" name="healthQuiz" value="take-turns"> 輪流發言，一次一人說話</label>
+            <label><input type="checkbox" name="healthQuiz" value="lower-voice"> 放慢語速，稍微降低音量</label>
+            <label><input type="checkbox" name="healthQuiz" value="speak-louder"> 提高音量，讓大家聽見</label>
+            <label><input type="checkbox" name="healthQuiz" value="talk-together"> 大家同時大聲發言</label>
+          </div>
+          <p id="healthQuizFeedback" class="alert-quiz-feedback" aria-live="polite"></p>
+          <button id="healthQuizSubmitBtn" class="alert-btn">確認答案</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
